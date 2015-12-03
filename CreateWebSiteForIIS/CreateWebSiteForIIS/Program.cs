@@ -55,9 +55,9 @@ namespace CreateWebSiteForIIS
 
                 //TODO: create website
                 string webSite = string.Format("{0}.socialspace.com.cn", siteName);
-                CreateWebSite(webSite, Path.Combine(destDir, "socialspace_com_cn"), "80", webSite, "", siteName, out err);
+                CreateWebSite(webSite, Path.Combine(destDir, "socialspace_com_cn"), "80", webSite, "LoginApp.aspx", siteName, out err);
                 webSite = string.Format("{0}.adminn.socialspace.com.cn", siteName);
-                CreateWebSite(webSite, Path.Combine(destDir, "adminn_socialspace_com_cn"), "80", webSite, "", siteName, out err);
+                CreateWebSite(webSite, Path.Combine(destDir, "adminn_socialspace_com_cn"), "80", webSite, "LoginAdmin.aspx", siteName, out err);
                 webSite = string.Format("{0}.rec.socialspace.com.cn", siteName);
                 CreateWebSite(webSite, Path.Combine(destDir, "api_socialspace_com_cn"), "80", webSite, "", siteName, out err);
 
@@ -97,6 +97,9 @@ namespace CreateWebSiteForIIS
             foreach (FileInfo file in source.GetFiles())
                 file.CopyTo(Path.Combine(target.FullName, file.Name), true);
         }
+
+
+
         private static void ConfigModify(string path, string destDir, string siteName)
         {
             var xml = XDocument.Load(path);
@@ -286,23 +289,35 @@ namespace CreateWebSiteForIIS
                 {
                     try
                     {
-                        const string aspNetV1 = "1.0.3705";
-                        const string aspNetV11 = "1.1.4322";
-                        const string aspNetV2 = "2.0.50727";
-                        const string aspNetV4 = "4.0.30319";
-                        const string targetAspNetVersion = aspNetV4;
+                        PropertyValueCollection testScriptMap = site.Properties["ScriptMaps"];
 
-                        //loop through the script maps
-                        for (var i = 0; i < siteVDir.Properties["ScriptMaps"].Count; i++)
+                        object[] allValues = (object[])testScriptMap.Value;
+                        object[] newValues = new object[allValues.Length];
+                        string oldVersion = "v1.1.4322";
+                        string newVersion = "v2.0.50727";
+                        //... etc to 4.0.30319 .....
+                        for (int i = 0; i < allValues.Length; i++)
                         {
-                            //replace the versions if they exists
-                            siteVDir.Properties["ScriptMaps"][i] =
-                                siteVDir.Properties["ScriptMaps"][i].ToString().Replace(aspNetV1, targetAspNetVersion);
-                            siteVDir.Properties["ScriptMaps"][i] =
-                                siteVDir.Properties["ScriptMaps"][i].ToString().Replace(aspNetV11, targetAspNetVersion);
-                            siteVDir.Properties["ScriptMaps"][i] =
-                                siteVDir.Properties["ScriptMaps"][i].ToString().Replace(aspNetV2, targetAspNetVersion);
+                            if (allValues[i] is string)
+                            {
+                                string temp = allValues[i] as string;
+                                if (temp.Contains(oldVersion))
+                                {
+                                    newValues[i] = temp.Replace(oldVersion, newVersion);
+                                }
+                                else
+                                {
+                                    newValues[i] = allValues[i];
+                                }
+
+                            }
+                            else
+                            {
+                                newValues[i] = allValues[i];
+                            }
                         }
+                        testScriptMap.Value = newValues;
+                        site.CommitChanges();
                     }
                     catch (Exception ex)
                     {

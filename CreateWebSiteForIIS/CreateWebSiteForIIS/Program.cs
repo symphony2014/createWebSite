@@ -201,12 +201,11 @@ namespace CreateWebSiteForIIS
                 site.Invoke("Put", "ServerComment", webSiteName.Replace('.', '_'));
                 site.Invoke("Put", "KeyType", "IIsWebServer");
 
-                site.Invoke("Put", "ServerBindings", ":" + PortNumber + ":" + HostHeader);
+                site.Invoke("Put", "ServerBindings", "10.137.254.193:" + PortNumber + ":" + HostHeader);
                 site.Invoke("Put", "AccessScript", true);
                 site.Invoke("Put", "ServerState", 2);
                 site.Invoke("Put", "FrontPageWeb", 1);
                 site.Invoke("Put", "DefaultDoc", DefaultDoc);
-
                 site.Invoke("Put", "ServerAutoStart", 1);
                 site.Invoke("Put", "ServerSize", 1);
 

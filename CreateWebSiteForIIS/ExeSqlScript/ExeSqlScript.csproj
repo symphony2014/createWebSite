@@ -36,14 +36,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net, Version=1.2.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -56,34 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmptyForTest.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmptyForTest.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EmptyForTest.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmptyForTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EmptyForTest.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EmptyForTest.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="EmptyForTest.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EmptyForTest.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EmptyForTest.edmx.diagram">
-      <DependentUpon>EmptyForTest.edmx</DependentUpon>
-    </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="14_NewSocialSpace4.7升级4.8文件_2015-1-22.sql">
@@ -94,16 +63,6 @@
     </Content>
     <Content Include="DBinitData_NewSS_V4.7.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmptyForTest.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EmptyForTest.edmx</DependentUpon>
-      <LastGenOutput>EmptyForTest.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EmptyForTest.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EmptyForTest.edmx</DependentUpon>
-      <LastGenOutput>EmptyForTest.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -20,12 +20,8 @@ namespace CreateWebSiteForIIS
                 log4net.Config.XmlConfigurator.Configure();
                 Console.WriteLine("Please input your site name:");
                 string siteName = Console.ReadLine();
-                //string sourceDir = @"D:\WebRoot\RealSite\socialspace_template";
-                //string destDir = @"D:\WebRoot\RealSite\" + siteName;
                 string sourceDir = ConfigurationManager.AppSettings["source"];
                 string destDir = Path.Combine(ConfigurationManager.AppSettings["dest"], siteName);
-                //string sourceDir = @"D:\socialspace_template";
-                //string destDir = @"D:\" + siteName;
                 string err = string.Empty;
 
 
@@ -75,19 +71,7 @@ namespace CreateWebSiteForIIS
             Console.ReadKey();
 
         }
-        //private static void ExecuteSqlScript()
-        //{
-        //    string sqlConnectionString = @"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=ccwebgrity;Data Source=SURAJIT\SQLEXPRESS";
 
-        //    string script = File.ReadAllText(@"E:\Project Docs\MX462-PD\MX756_ModMappings1.sql");
-
-        //    SqlConnection conn = new SqlConnection(sqlConnectionString);
-
-        //    Server server = new Server(new ServerConnection(conn));
-
-        //    server.ConnectionContext.ExecuteNonQuery(script);
-
-        //}
         public static void CopyFilesRecursively(string sourceDir, string targetDir)
         {
             DirectoryInfo source = new DirectoryInfo(sourceDir);
@@ -124,12 +108,14 @@ namespace CreateWebSiteForIIS
                 }
             };
             setConn("connectionString", string.Format(@"server=10.137.254.194\Externals;database=SocialSpaceFor{0};uid=SocialSpaceWebAccesser;pwd=Web@User_2011", siteName));
-            setAttr("MenuLabel", string.Format(@"D:\WebRoot\RealSite\{0}\adminn_socialspace_com_cn\Config\MenuLabel\", destDir));
+
+            string ex = path.Contains("adminn") ? "adminn_" : "";
+            setAttr("MenuLabel", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\MenuLabel\", destDir, ex));
             setAttr("ConfigPageXML", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\ConfigPage.xml", destDir));
             setAttr("PDFPath", string.Format(@"D:\WebRoot\RealSite\{0}\MultiLanguageFonts\arialuni.ttf", destDir));
-            setAttr("ErrorReport", string.Format(@"D:\WebRoot\RealSite\{0}\adminn_socialspace_com_cn\Config\ErrorReport\", destDir));
-            setAttr("ErrorMessage", string.Format(@"D:\WebRoot\RealSite\{0}\adminn_socialspace_com_cn\Config\ErrorMessage\", destDir));
-            setAttr("Module", string.Format(@"D:\WebRoot\RealSite\{0}\adminn_socialspace_com_cn\Config\Module\", destDir));
+            setAttr("ErrorReport", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\ErrorReport\", destDir, ex));
+            setAttr("ErrorMessage", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\ErrorMessage\", destDir, ex));
+            setAttr("Module", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\Module\", destDir, ex));
             setAttr("Resource_Upload", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\Upload", destDir));
             setAttr("Resource_File", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\Display", destDir));
             setAttr("Resource_Display", string.Format(@"http://{0}.rec.socialspace.com.cn", siteName));
@@ -293,7 +279,7 @@ namespace CreateWebSiteForIIS
                         object[] allValues = (object[])testScriptMap.Value;
                         object[] newValues = new object[allValues.Length];
                         string oldVersion = "v1.1.4322";
-                        string newVersion = "v2.0.50727";
+                        string newVersion = "v4.0.30319";
                         //... etc to 4.0.30319 .....
                         for (int i = 0; i < allValues.Length; i++)
                         {

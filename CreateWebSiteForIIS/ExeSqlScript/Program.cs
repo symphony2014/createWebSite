@@ -16,16 +16,30 @@ namespace ExeSqlScript
         {
             log4net.Config.XmlConfigurator.Configure();
             string siteName = Console.ReadLine();
-            //string sqlConnectionString = string.Format(@"server=10.137.254.194\Externals;database=SocialSpaceFor{0};uid=SocialSpaceWebAccesser;pwd=Web@User_2011", siteName);
-
+            int max = 0;
+            string sqlConnectionString = string.Format(@"server=10.137.254.194\Externals;database=SocialSpaceFor{0};uid=SocialSpaceWebAccesser;pwd=Web@User_2011", siteName);
+            string globalConn = @"server=10.137.254.194\Externals;database=SocialSpaceForSNS;uid=SocialSpaceWebAccesser;pwd=Web@User_2011";
             string[] paths = new string[] {
                 "CreateTable_NewSS_V4.7.sql","14_NewSocialSpace4.7升级4.8文件_2015-1-22.sql","DBinitData_NewSS_V4.7.sql"
             };
-
-            using (EmptyForTestEntities2 entities = new EmptyForTestEntities2())
+            //global 
+            using (SqlConnection con = new SqlConnection(globalConn))
             {
+                con.Open();
+                using (var command = new SqlCommand("select max(communityId) from community", con))
+                {
+                    max = Convert.ToInt32(command.ExecuteScalar());
+                }
+
+                Update(siteName, max, con);
+                con.Close();
+            }
+            using (SqlConnection con = new SqlConnection(sqlConnectionString))
+            {
+                con.Open();
                 foreach (var item in paths)
                 {
+                    Console.WriteLine("exescript:" + item);
                     instance.Info("file:" + item);
                     string script = File.ReadAllText(item, Encoding.Default);
                     // split script on GO command
@@ -37,44 +51,40 @@ namespace ExeSqlScript
                         {
                             try
                             {
-                                int result = entities.Database.ExecuteSqlCommand(str);
-                                instance.Info("-------------execute----------------");
-                                instance.Info(str);
+                                using (var command = new SqlCommand(str, con))
+                                {
+                                    int result = command.ExecuteNonQuery();
+                                    Console.WriteLine("success:" + result);
+                                    instance.Info("success:" + result);
+                                }
                             }
                             catch (Exception ex)
                             {
+                                Console.WriteLine("success:" + ex.ToString());
                                 instance.Debug("debug:", ex);
                             }
 
                         }
                     }
                 }
+
+                Update(siteName, max, con);
+                using (var command = new SqlCommand(string.Format("update UserPassport set communityId={0}", max + 1), con))
+                {
+                    int result = command.ExecuteNonQuery();
+                    Console.WriteLine("exe script :" + siteName + result);
+                }
+                con.Close();
             }
-            //            using (SqlConnection conn = new SqlConnection(string.Format(sqlConnectionString, siteName)))
-            //            {
+        }
 
-            //                Server server = new Server(new ServerConnection(conn));
-            //                foreach (var item in paths)
-            //                {
-            //                    string script = File.ReadAllText(item);
-            //                    server.ConnectionContext.ExecuteNonQuery(script);
-            //                }
-            //            };
-
-            //            string global =@"server=10.137.254.194\Externals;database=SocialSpaceForSNS;uid=SocialSpaceWebAccesser;pwd=Web@User_2011";
-            //            using (SqlConnection conn = new SqlConnection(global))
-            //            {
-            //                Server server = new Server(new ServerConnection(conn));
-            //                foreach (var item in paths)
-            //                {
-            //                    int max=0;
-            //                   max=Convert.ToInt32( server.ConnectionContext.ExecuteScalar("select max(communityId) from Community"));
-            //                    string script = string.Format(@"insert into Community (CommunityId, CommunityName,[Description],UniqueWord,ClientId,UserPassportId,DateCreated) values
-            //({0},{1},{1},{1},1,110523211251349122,getdate())",max+1,siteName);
-            //                    server.ConnectionContext.ExecuteNonQuery(script);
-            //                }
-            //            };
-
+        private static void Update(string siteName, int max, SqlConnection con)
+        {
+            using (var command = new SqlCommand(string.Format("insert into Community values({{0},{1},{1},{1},1,110523211251349122,getdate())", max + 1, siteName), con))
+            {
+                int result = command.ExecuteNonQuery();
+                Console.WriteLine("exe script :" + siteName + result);
+            }
         }
     }
 }

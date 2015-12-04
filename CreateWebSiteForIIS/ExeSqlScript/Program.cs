@@ -30,7 +30,6 @@ namespace ExeSqlScript
                 {
                     max = Convert.ToInt32(command.ExecuteScalar());
                 }
-
                 Update(siteName, max, con);
                 con.Close();
             }

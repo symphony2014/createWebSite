@@ -122,7 +122,6 @@ namespace CreateWebSiteForIIS
             setAttr("httptop", string.Format(@"http://{0}.socialspace.com.cn", siteName));
             setAttr("NationalityConfig", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\NationalityConfig.xml", destDir));
             setAttr("CategoryConfigPage", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\", destDir));
-            setAttr("MobileDownLoad", string.Format(@"http://{0}.socialspace.com.cn/mobile/index.htm", siteName));
             setAttr("SectionListImg", string.Format(@"http://{0}.rec.socialspace.com.cn/Index/Resource/ImageForNormal/20150304184026_5637.jpg", siteName));
 
 

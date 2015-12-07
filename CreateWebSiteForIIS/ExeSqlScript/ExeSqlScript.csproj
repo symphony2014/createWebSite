@@ -58,6 +58,7 @@
     <Content Include="14_NewSocialSpace4.7升级4.8文件_2015-1-22.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="check_correctness.sql" />
     <Content Include="CreateTable_NewSS_V4.7.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -20,6 +20,10 @@ namespace CreateWebSiteForIIS
                 log4net.Config.XmlConfigurator.Configure();
                 Console.WriteLine("Please input your site name:");
                 string siteName = Console.ReadLine();
+                Console.WriteLine("Please input your site color:");
+                string color = Console.ReadLine();
+                Console.WriteLine("Contain mobile app:(yes/no)");
+                string containMobile = Console.ReadLine();
                 string sourceDir = ConfigurationManager.AppSettings["source"];
                 string destDir = Path.Combine(ConfigurationManager.AppSettings["dest"], siteName);
                 string err = string.Empty;
@@ -48,14 +52,23 @@ namespace CreateWebSiteForIIS
                 {
                     ConfigModify(item, Path.GetFileName(destDir), siteName);
                 }
+                //TODO : modify css file
+                int id = 0;
+                CssModify.ModifyCss(destDir, color, out id);
 
+
+                //TODO: contain mobile app
+                if (containMobile == "yes")
+                {
+                    ModifyMobileConfig.Modify(siteName, id);
+                }
                 //TODO: create website
                 string webSite = string.Format("{0}.socialspace.com.cn", siteName);
                 CreateWebSite(webSite, Path.Combine(destDir, "socialspace_com_cn"), "80", webSite, "LoginApp.aspx", siteName, out err);
                 webSite = string.Format("{0}.adminn.socialspace.com.cn", siteName);
                 CreateWebSite(webSite, Path.Combine(destDir, "adminn_socialspace_com_cn"), "80", webSite, "LoginAdmin.aspx", siteName, out err);
                 webSite = string.Format("{0}.rec.socialspace.com.cn", siteName);
-                CreateWebSite(webSite, Path.Combine(destDir, "api_socialspace_com_cn"), "80", webSite, "", siteName, out err);
+                CreateWebSite(webSite, Path.Combine(destDir, "rec_socialspace_com_cn", "Display"), "80", webSite, "", siteName, out err);
 
 
                 //TODO: update datebase
@@ -112,6 +125,7 @@ namespace CreateWebSiteForIIS
             string ex = path.Contains("adminn") ? "adminn_" : "";
             setAttr("MenuLabel", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\MenuLabel\", destDir, ex));
             setAttr("ConfigPageXML", string.Format(@"D:\WebRoot\RealSite\{0}\rec_socialspace_com_cn\ConfigPage.xml", destDir));
+            setAttr("WebName", siteName);
             setAttr("PDFPath", string.Format(@"D:\WebRoot\RealSite\{0}\MultiLanguageFonts\arialuni.ttf", destDir));
             setAttr("ErrorReport", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\ErrorReport\", destDir, ex));
             setAttr("ErrorMessage", string.Format(@"D:\WebRoot\RealSite\{0}\{1}socialspace_com_cn\Config\ErrorMessage\", destDir, ex));

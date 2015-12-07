@@ -22,17 +22,9 @@ namespace ExeSqlScript
             string[] paths = new string[] {
                 "CreateTable_NewSS_V4.7.sql","14_NewSocialSpace4.7升级4.8文件_2015-1-22.sql","DBinitData_NewSS_V4.7.sql"
             };
-            //global 
-            using (SqlConnection con = new SqlConnection(globalConn))
-            {
-                con.Open();
-                using (var command = new SqlCommand("select max(communityId) from community", con))
-                {
-                    max = Convert.ToInt32(command.ExecuteScalar());
-                }
-                Update(siteName, max, con);
-                con.Close();
-            }
+          
+            
+
             using (SqlConnection con = new SqlConnection(sqlConnectionString))
             {
                 con.Open();
@@ -79,7 +71,7 @@ namespace ExeSqlScript
 
         private static void Update(string siteName, int max, SqlConnection con)
         {
-            using (var command = new SqlCommand(string.Format("insert into Community values({{0},{1},{1},{1},1,110523211251349122,getdate())", max + 1, siteName), con))
+            using (var command = new SqlCommand(string.Format("insert into Community values({0},'{1}','{1}','{1}',1,110523211251349122,getdate())", max + 1, siteName), con))
             {
                 int result = command.ExecuteNonQuery();
                 Console.WriteLine("exe script :" + siteName + result);
